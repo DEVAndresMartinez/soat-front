@@ -41,8 +41,8 @@ export default function Footer() {
 
     return (
         <div className="w-full flex flex-col items-center justify-center gap-5 md:gap-10 bg-[var(--bg-footer)] p-footer">
-            <div className="flex flex-col md:flex-row justify-between gap-3 md:gap-14">
-                <div className="flex w-full md:w-2/3 lg:w-1/3 flex-col gap-2 md:gap-4">
+            <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap justify-between gap-3 md:gap-8 lg:gap-14">
+                <div className="flex w-full md:w-2/4 lg:w-1/3 flex-col gap-2 md:gap-4">
                     <h3 className="text-[var(--secondary)] font-extrabold text-lg">Nosotros</h3>
                     <p className="text-[var(--secondary)] text-lg"> Practi es una fintech con más de 15 años de experiencia en pagos digitales y tecnología financiera
                     </p>
@@ -63,7 +63,7 @@ export default function Footer() {
                         Ética
                     </p>
                 </div>
-                <div className="flex w-full md:w-2/3 lg:w-1/3 flex-col gap-2 md:gap-4">
+                <div className="flex w-full md:w-full lg:w-1/3 flex-col gap-2 md:gap-4">
                     <h3 className="text-[var(--secondary)] font-extrabold text-lg">Contacto</h3>
                     <p className="text-[var(--secondary)] text-lg">
                         Celular: + (57) 310 8197930
@@ -77,9 +77,9 @@ export default function Footer() {
                         servicioalcliente@practisistemas.com
                         pqr@practisistemas.com
                     </p>
-                    <div className="w-fit bg-[var(--secondary)] flex gap-2 md:gap-4 text-white rounded-md p-socials">
+                    <div className="w-full md:w-fit justify-around bg-[var(--secondary)] flex gap-2 md:gap-4 text-white rounded-md p-socials">
                         {socials.map((social, index) => (
-                            <Link key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-[var(--primary)] hover:scale-110 transition-all duration-200" aria-label={social.name}>
+                            <Link key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-6 lg:h-6 flex items-center justify-center rounded-full hover:bg-[var(--primary)] hover:scale-110 transition-all duration-200" aria-label={social.name}>
                                 <Image src={social.icon} alt="" width={100} height={100} className="img-sociales"></Image>
                             </Link>
                         ))}

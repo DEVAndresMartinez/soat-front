@@ -12,7 +12,9 @@ const config = {
                 background: '#109F4A',
             },
             fontFamily: {
-            }
+                gotham: ['Gotham', 'sans-serif'],
+                flama: ['Flama', 'sans-serif'],
+            },
         },
     },
     plugins: [],
