@@ -1,6 +1,9 @@
 'use client';
 
+import { useDisableScroll } from "@/hooks/DisableScroll";
 import Image from "next/image";
+import { useState } from "react";
+import PriceModal from "../modals/PriceModal";
 
 const advantages = [
     {
@@ -27,8 +30,13 @@ const advantages = [
 
 export default function Advantages() {
 
+    const [openModal, setOpenModal] = useState(false);
+    const openConsulta = () => setOpenModal(true);
+    useDisableScroll(openModal);
+
     return (
         <section className="w-full flex flex-col items-center">
+            <PriceModal isOpen={openModal} onClose={() => setOpenModal(false)}></PriceModal>
             <div className="w-full flex flex-col justify-center items-center gap-15 h-3/6 bg-white p-adv">
                 <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-x-20 gap-y-5 w-5/6 md:w-full lg:w-[95%] h-full card-advantages">
                     {advantages.map((advantge, index) => (
@@ -47,7 +55,7 @@ export default function Advantages() {
                             <Image src="/images/icons/WEB SOAT ICO_ICO 08.png" alt="Iconos soat 2" width={80} height={80} className="w-[50px] md:w-[60px] lg:w-[80px]"></Image>
                             <Image src="/images/icons/WEB SOAT ICO_ICO 09.png" alt="Iconos soat 3" width={80} height={80} className="w-[50px] md:w-[60px] lg:w-[80px]"></Image>
                         </div>
-                        <button type="button" className="p-btn w-full rounded-2xl font-bold text-lg md:text-lg lg:text-3xl bg-white text-[var(--secondary)] outline-0 p-btn cursor-pointer hover:scale-90 transition-all duration-200">Cotiza tu SOAT con Practi</button>
+                        <button type="button" className="p-btn w-full rounded-2xl font-bold text-lg md:text-lg lg:text-3xl bg-white text-[var(--secondary)] outline-0 p-btn cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={openConsulta}>Cotiza tu SOAT con Practi</button>
                     </div>
 
                 </div>

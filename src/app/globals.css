@@ -12,16 +12,24 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    /* font-family: 'Poppins', sans-serif; */
 }
 
 body {
     font-family: 'Gotham', sans-serif;
 }
 
+li {
+    font-family: 'Flama', sans-serif;
+}
+
+ul.flechas>li::marker {
+    content: '\25B8';
+    color: var(--primary);
+}
+
+
 html {
     overflow-y: auto;
-    /* position: absolute; */
 }
 
 html::-webkit-scrollbar {
@@ -98,10 +106,57 @@ html::-webkit-scrollbar-thumb {
     background-size: cover;
 }
 
+.btn-loop {
+    animation: btn-loop 0.8s infinite alternate;
+}
+
+.btn-loop:hover,
+.btn-loop:active {
+    animation-play-state: paused;
+}
+
+.p-modal {
+    padding: 1.5rem !important;
+    box-shadow: -2px 4px 6px var(--primary) !important;
+}
+
+.input-style {
+    width: 100%;
+    height: 40px;
+    padding: 0 0.5rem;
+}
+
+.btn-style {
+    width: fit-content;
+    padding: 0.2rem 0.5rem;
+}
+
+.btn-style-points {
+    width: fit-content;
+    padding: 0.2rem 1rem;
+}
+
+.p-points {
+    padding: 1rem;
+}
+
+@keyframes btn-loop {
+    from {
+        transform: scale(1.02);
+    }
+
+    to {
+        transform: scale(0.95);
+    }
+}
+
+
+
 @media screen and (max-width: 640px) {
     html::-webkit-scrollbar {
         width: 1px;
     }
+
     .p-footer {
         padding: 2rem !important;
     }
@@ -133,6 +188,10 @@ html::-webkit-scrollbar-thumb {
 
     .p-reminder {
         padding: 1.5rem;
+    }
+
+    .p-points {
+        padding: 0.8rem;
     }
 }
 

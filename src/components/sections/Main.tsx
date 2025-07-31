@@ -1,10 +1,22 @@
 'use client';
 
 import Image from "next/image";
+import { useState } from "react";
+import PriceModal from "../modals/PriceModal";
+import { useDisableScroll } from "@/hooks/DisableScroll";
 
 export default function Main() {
+
+    const [openRequestOneModal, setRequestOneModal] = useState(false);
+    // const [openRequestTwoModal, setRequestTwoModal] = useState(false);
+
+    
+    const openConsulta = () => setRequestOneModal(true);
+    useDisableScroll(openRequestOneModal);
+
     return (
         <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center">
+            <PriceModal isOpen={openRequestOneModal} onClose={() => setRequestOneModal(false)}></PriceModal>
             <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]"/>
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
                 <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-1/10 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={210} height={100}></Image>
@@ -19,7 +31,7 @@ export default function Main() {
                     </div>
                     <div className="w-4/5 z-10 flex flex-col-reverse md:flex-row justify-center gap-2 md:gap-2 lg:gap-3 h-fit bg-white rounded-2xl shadow-lg border-3 border-[var(--primary)] p-box-two absolute bottom-[-5%] md:bottom-[-14%] lg:bottom-[-11%]">
                         <p className="text-center text-[var(--secondary)] w-full md:w-3/5 text-xl md:text-2xl lg:text-3xl font-bold">Ingresa los datos de tu vehículo y cotiza tu SOAT</p>
-                        <button type="button" className="bg-[var(--primary)] text-[var(--secondary)] text-1xl md:text-xl lg:text-2xl outline-0 font-extrabold p-btn rounded-2xl cursor-pointer hover:scale-90 transition-all duration-200">¡COTIZA GRATIS!</button>
+                        <button type="button" className="bg-[var(--primary)] text-[var(--secondary)] text-1xl md:text-xl lg:text-2xl outline-0 font-extrabold p-btn rounded-2xl cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={openConsulta}>¡COTIZA GRATIS!</button>
                     </div>
                 </div>
             </div>
