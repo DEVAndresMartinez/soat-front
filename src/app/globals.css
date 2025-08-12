@@ -27,17 +27,51 @@ ul.flechas>li::marker {
     color: var(--primary);
 }
 
+input[type='checkbox'] {
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--primary);
+    border-radius: 0.25rem;
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    
+}
 
-html {
+input[type='checkbox']:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+input[type='checkbox']::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: none;
+}
+
+input[type='checkbox']:checked::after {
+    display: block;
+}
+
+html, .overflow-style {
     overflow-y: auto;
 }
 
-html::-webkit-scrollbar {
+html::-webkit-scrollbar, .overflow-style::-webkit-scrollbar {
     width: 10px;
     border-radius: 4px !important;
 }
 
-html::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb, .overflow-style::-webkit-scrollbar-thumb {
     background-color: var(--secondary);
     border-radius: 4px;
 }
@@ -121,14 +155,19 @@ html::-webkit-scrollbar-thumb {
 }
 
 .input-style {
-    width: 100%;
     height: 40px;
     padding: 0 0.5rem;
+    font-family: 'Flama', sans-serif;
 }
 
 .btn-style {
     width: fit-content;
     padding: 0.2rem 0.5rem;
+    cursor: pointer;
+}
+
+.btn-validar {
+    padding: 0.2rem 2rem;
 }
 
 .btn-style-points {
@@ -138,6 +177,14 @@ html::-webkit-scrollbar-thumb {
 
 .p-points {
     padding: 1rem;
+}
+
+.m-modal {
+    margin: 1rem 0;
+}
+
+.mb-modal {
+    margin-bottom: 1rem;
 }
 
 @keyframes btn-loop {
@@ -151,12 +198,15 @@ html::-webkit-scrollbar-thumb {
 }
 
 
-
 @media screen and (max-width: 640px) {
     html::-webkit-scrollbar {
         width: 1px;
     }
-
+    
+    input[type='checkbox'] {
+        width: 38px;
+    }
+    
     .p-footer {
         padding: 2rem !important;
     }
@@ -242,4 +292,5 @@ html::-webkit-scrollbar-thumb {
     .p-reminder {
         padding: 1.5rem;
     }
+    
 }

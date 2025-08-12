@@ -6,20 +6,19 @@ import { useState } from "react";
 const identificactionTypes = [
     {
         id: 1,
-        name: 'Tarjeta de Identidad',
-        pref: 'TI'
+        name: 'Cédula de Ciudadania',
+        pref: 'C'
     },
     {
         id: 2,
-        name: 'Cédula de Ciudadania',
-        pref: 'CC'
+        name: 'NIT',
+        pref: 'NIT'
     }
 ];
 
-export default function Points () {
+export default function Points() {
 
-        const [selected, setSelected] = useState(identificactionTypes[0]);
-    
+    const [selected, setSelected] = useState(identificactionTypes[0]);
 
     return (
         <section className="w-full flex flex-col-reverse md:flex-row">
@@ -60,7 +59,7 @@ export default function Points () {
                                 </Listbox>
                             </div>
 
-                            <input type="text" placeholder="Número de documento" className="border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required />
+                            <input type="text" placeholder="Número de documento" className="w-full border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required />
                             <div className="flex flex-col gap-3 w-full">
                                 <div className="w-full h-16 bg-gray-200 rounded-md flex items-center justify-center text-gray-600">
                                     CAPTCHA SIMULADO
@@ -73,9 +72,9 @@ export default function Points () {
                     </div>
                     <div className="w-full md:w-4/7 p-points text-white">
                         <ul className="flechas list-disc flex flex-col gap-2">
-                            <li className="text-xl md:text-large lg:text-2xl">Cada vez que alguien compra su SOAT con tu código de promotor, ganas un porcentaje acumulable para tu próxima compra.</li>
+                            <li className="text-xl md:text-large lg:text-2xl">Cada vez que alguien compra su SOAT con tu código, ganas un porcentaje acumulable para tu próxima compra.</li>
                             <li className="text-xl md:text-large lg:text-2xl">Aquí puedes consultar cuántas ventas has logrado gracias a tus referidos.</li>
-                            <li className="text-xl md:text-large lg:text-2xl"><b>¡Comparte tu código y acumula!</b> <br /> ¡Entre más referidos tengas, más cerca estás de obtener tu próximo SOAT completamente gratis!</li>
+                            <li className="text-xl md:text-large lg:text-2xl"><b>¡Comparte tu código y acumula %!</b> <br /> ¡Entre más referidos tengas, más cerca estás de obtener tu próximo SOAT gratis!</li>
                         </ul>
                     </div>
                 </div>

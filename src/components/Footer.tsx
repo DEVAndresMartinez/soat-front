@@ -44,7 +44,7 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap justify-between gap-3 md:gap-8 lg:gap-14">
                 <div className="flex w-full md:w-2/4 lg:w-1/3 flex-col gap-2 md:gap-4">
                     <h3 className="text-[var(--secondary)] font-extrabold text-lg">Nosotros</h3>
-                    <p className="text-[var(--secondary)] text-lg"> Practi es una fintech con más de 15 años de experiencia en pagos digitales y tecnología financiera
+                    <p className="text-[var(--secondary)] text-lg"> Practi es una fintech con más de 15 años de experiencia en pagos digitales y tecnología financiera.
                     </p>
                     <p className="text-[var(--secondary)] text-lg">
                         Nuestra plataforma está respaldada por

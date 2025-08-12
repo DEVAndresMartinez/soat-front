@@ -4,20 +4,77 @@ import Image from "next/image";
 import { useState } from "react";
 import PriceModal from "../modals/PriceModal";
 import { useDisableScroll } from "@/hooks/DisableScroll";
+import ResultModal from "../modals/ResultModal";
+
+type ConsultaData = {
+  marca: string;
+  linea: string;
+  modelo: string;
+  cilindraje: string;
+  vigenciaDesde: string;
+  vigenciaHasta: string;
+  costoSoat: number;
+  costoDistribucion: number;
+  total: number;
+};
 
 export default function Main() {
 
     const [openRequestOneModal, setRequestOneModal] = useState(false);
-    // const [openRequestTwoModal, setRequestTwoModal] = useState(false);
+    const [consultData, setConsultData] = useState<ConsultaData | null>(null);
+    const [showResultModal, setShowResultModal] = useState(false);
 
-    
     const openConsulta = () => setRequestOneModal(true);
     useDisableScroll(openRequestOneModal);
 
+    const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: string }) => {
+        try {
+            const response = await fetch('http://172.23.88.101:5000/api/soat-mundial/consulta-web/', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    placa: data.placa,
+                    tipo_doc: data.tipoDoc,
+                    cedula: data.numeroDoc,
+                }),
+            });
+
+            if (!response.ok) throw new Error('Error en la consulta');
+
+            const result = await response.json();
+
+            setConsultData({
+                marca: result.data.vehiculo.marca,
+                linea: result.data.vehiculo.linea,
+                modelo: result.data.vehiculo.modelo,
+                cilindraje: result.cilindraje,
+                vigenciaDesde: result.data.fechaInicioVigencia,
+                vigenciaHasta: result.data.fechaFinVigencia,
+                costoSoat: result.data.valorPoliza,
+                costoDistribucion: result.data.comisionServicio,
+                total: result.data.valorTotalPagar + result.data.comisionServicio
+            });
+
+            setRequestOneModal(false);
+            setShowResultModal(true);
+        } catch (error) {
+            console.error('Error al consultar SOAT:', error);
+        }
+    };
+
     return (
         <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center">
-            <PriceModal isOpen={openRequestOneModal} onClose={() => setRequestOneModal(false)}></PriceModal>
-            <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]"/>
+            <PriceModal
+                isOpen={openRequestOneModal}
+                onClose={() => setRequestOneModal(false)}
+                onSubmit={handleConsultaSubmit}
+            />
+            <ResultModal 
+                isOpen={showResultModal}
+                onClose={() => setShowResultModal(false)}
+                data={consultData}
+            />
+            <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]" />
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
                 <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-1/10 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={210} height={100}></Image>
                 <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-1/10 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 flex md:hidden" width={210} height={100}></Image>

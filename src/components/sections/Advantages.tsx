@@ -3,7 +3,7 @@
 import { useDisableScroll } from "@/hooks/DisableScroll";
 import Image from "next/image";
 import { useState } from "react";
-import PriceModal from "../modals/PriceModal";
+import ResultModal from "../modals/ResultModal";
 
 const advantages = [
     {
@@ -14,18 +14,18 @@ const advantages = [
     {
         icon: '/images/icons/WEB SOAT ICO_ICO 01.png',
         title: 'Cómpralo en minutos desde tu celular',
-        desc: 'Sin vueltas, ni papeleo, Lo que necesitas, cuando lo necesitas'
-    },
-    {
-        icon: '/images/icons/WEB SOAT ICO_ICO 02.png',
-        title: 'Respaldado por aseguradoras autorizadas',
-        desc: 'Tu compra está protegida. Recibe tu SOAT válido y verificado'
+        desc: 'Sin vueltas, ni papeleo. Lo que necesitas, cuando lo necesitas.'
     },
     {
         icon: '/images/icons/WEB SOAT ICO_ICO 03.png',
         title: 'Esta compra apoya a un tendero colombiano',
         desc: 'Cada SOAT vendido representa un ingreso para miles de tenderos.'
     },
+    {
+        icon: '/images/icons/WEB SOAT ICO_ICO 02.png',
+        title: 'Respaldado por aseguradoras autorizadas',
+        desc: 'Tu compra está protegida. Recibe tu SOAT válido y verificado.'
+    }
 ];
 
 export default function Advantages() {
@@ -36,7 +36,7 @@ export default function Advantages() {
 
     return (
         <section className="w-full flex flex-col items-center">
-            <PriceModal isOpen={openModal} onClose={() => setOpenModal(false)}></PriceModal>
+            <ResultModal isOpen={openModal} onClose={() => setOpenModal(false)}></ResultModal>
             <div className="w-full flex flex-col justify-center items-center gap-15 h-3/6 bg-white p-adv">
                 <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-x-20 gap-y-5 w-5/6 md:w-full lg:w-[95%] h-full card-advantages">
                     {advantages.map((advantge, index) => (
