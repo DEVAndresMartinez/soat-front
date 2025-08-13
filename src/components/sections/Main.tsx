@@ -3,76 +3,76 @@
 import Image from "next/image";
 import { useState } from "react";
 import PriceModal from "../modals/PriceModal";
-import { useDisableScroll } from "@/hooks/DisableScroll";
 import ResultModal from "../modals/ResultModal";
-
-type ConsultaData = {
-  marca: string;
-  linea: string;
-  modelo: string;
-  cilindraje: string;
-  vigenciaDesde: string;
-  vigenciaHasta: string;
-  costoSoat: number;
-  costoDistribucion: number;
-  total: number;
-};
+import Alert from "../AlertValidate";
+import { useSoatApi } from "@/hooks/UseSoatApi";
+import { useDisableScroll } from "@/hooks/DisableScroll";
+import { DataResponse } from "@/types/ConsultaData";
+import { CuponDataResponse } from "@/types/CuponData";
 
 export default function Main() {
 
     const [openRequestOneModal, setRequestOneModal] = useState(false);
-    const [consultData, setConsultData] = useState<ConsultaData | null>(null);
+    const [consultData, setConsultData] = useState<DataResponse | null>(null);
     const [showResultModal, setShowResultModal] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
 
-    const openConsulta = () => setRequestOneModal(true);
+    const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion } = useSoatApi();
+
     useDisableScroll(openRequestOneModal);
-
+    useDisableScroll(showResultModal);
+    
     const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: string }) => {
-        try {
-            const response = await fetch('http://172.23.88.101:5000/api/soat-mundial/consulta-web/', {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    placa: data.placa,
-                    tipo_doc: data.tipoDoc,
-                    cedula: data.numeroDoc,
-                }),
-            });
-
-            if (!response.ok) throw new Error('Error en la consulta');
-
-            const result = await response.json();
-
-            setConsultData({
-                marca: result.data.vehiculo.marca,
-                linea: result.data.vehiculo.linea,
-                modelo: result.data.vehiculo.modelo,
-                cilindraje: result.cilindraje,
-                vigenciaDesde: result.data.fechaInicioVigencia,
-                vigenciaHasta: result.data.fechaFinVigencia,
-                costoSoat: result.data.valorPoliza,
-                costoDistribucion: result.data.comisionServicio,
-                total: result.data.valorTotalPagar + result.data.comisionServicio
-            });
-
-            setRequestOneModal(false);
-            setShowResultModal(true);
-        } catch (error) {
-            console.error('Error al consultar SOAT:', error);
+        const result = await consultarSoat(data);
+        if (!result) {
+            setConsultData(null);
+            setShowError(true);
+            setTimeout(() => setShowError(false), 4000);
+            return;
         }
+        setConsultData(result);
+        setRequestOneModal(false);
+        setShowResultModal(true);
     };
 
+    const validateCupon = async (data: { consultaId: string; cupon: string; clienteId: string }) => {
+        const result = await cuponValidate(data);
+        if (!result) {
+            setShowError(true);
+            setCuponData(null);
+            setTimeout(() => setShowError(false), 4000);
+            return;
+        }
+        setCuponData(result);
+    };
+
+    const handleCloseResultModal = () => {
+        setShowResultModal(false);
+        setCuponData(null);
+    }
+
     return (
-        <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center">
+        <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center z-100">
+            <Alert
+                show={showError}
+                message={error}
+            />
+
             <PriceModal
                 isOpen={openRequestOneModal}
                 onClose={() => setRequestOneModal(false)}
                 onSubmit={handleConsultaSubmit}
             />
-            <ResultModal 
+
+            <ResultModal
                 isOpen={showResultModal}
-                onClose={() => setShowResultModal(false)}
+                onClose={handleCloseResultModal}
                 data={consultData}
+                cupon={validateCupon}
+                cuponData={cuponData}
+                actualizarHomologacion={actualizarHomologacion}
+                loading={loading}
             />
             <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]" />
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
@@ -88,7 +88,7 @@ export default function Main() {
                     </div>
                     <div className="w-4/5 z-10 flex flex-col-reverse md:flex-row justify-center gap-2 md:gap-2 lg:gap-3 h-fit bg-white rounded-2xl shadow-lg border-3 border-[var(--primary)] p-box-two absolute bottom-[-5%] md:bottom-[-14%] lg:bottom-[-11%]">
                         <p className="text-center text-[var(--secondary)] w-full md:w-3/5 text-xl md:text-2xl lg:text-3xl font-bold">Ingresa los datos de tu vehículo y cotiza tu SOAT</p>
-                        <button type="button" className="bg-[var(--primary)] text-[var(--secondary)] text-1xl md:text-xl lg:text-2xl outline-0 font-extrabold p-btn rounded-2xl cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={openConsulta}>¡COTIZA GRATIS!</button>
+                        <button type="button" className="bg-[var(--primary)] text-[var(--secondary)] text-1xl md:text-xl lg:text-2xl outline-0 font-extrabold p-btn rounded-2xl cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={() => setRequestOneModal(true)}>¡COTIZA GRATIS!</button>
                     </div>
                 </div>
             </div>
