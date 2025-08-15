@@ -21,7 +21,7 @@ export default function Points() {
     const [selected, setSelected] = useState(identificactionTypes[0]);
 
     return (
-        <section className="w-full flex flex-col-reverse md:flex-row">
+        <section id="points" className="w-full flex flex-col-reverse md:flex-row">
             <div className="w-full flex justify-center items-center bg-white p-points">
                 <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-10 w-[95%] md:w-[95%] lg:w-[80%] h-full bg-[var(--secondary)] rounded-4xl p-points">
                     <div className="w-full md:w-3/7 bg-white p-points rounded-3xl flex flex-col gap-3">

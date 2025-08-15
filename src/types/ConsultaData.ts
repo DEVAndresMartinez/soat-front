@@ -5,7 +5,7 @@ export type DataResponse = {
     cedula: number;
     consultaId: string;
     clienteId: string;
-    data: Data;
+    data: DataTwo;
     timestamp: string;
     api_key_used: string;
 }

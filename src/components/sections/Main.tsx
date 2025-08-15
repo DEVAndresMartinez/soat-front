@@ -22,8 +22,8 @@ export default function Main() {
 
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
-    
-    const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: string }) => {
+
+    const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
         if (!result) {
             setConsultData(null);
@@ -76,8 +76,20 @@ export default function Main() {
             />
             <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]" />
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
-                <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-1/10 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={210} height={100}></Image>
-                <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-1/10 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 flex md:hidden" width={210} height={100}></Image>
+                <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={210} height={100}></Image>
+                <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 flex md:hidden" width={210} height={100}></Image>
+                <button type="button" className="absolute right-3 md:right-1/30 lg:right-1/10 top-6 md:top-8 lg:top-12 z-20 hidden md:flex hover:cursor-pointer btn-points hover:scale-110 transition-all duration-200" onClick={() => {
+                    const el = document.getElementById('points');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                }}>
+                    <span className="min-h-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:w-10 md:h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={5}>
+                            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
+                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                    </span>
+                    <span className="font-bold max-w-[150px] text-start text-xs md:text-sm lg:text-base hidden md:flex">Consulta tus SOAT vendidos</span>
+                </button>
                 <div className="flex justify-center items-center w-full md:w-[95%] lg:w-[80%] h-full md:h-11/12 bg-white relative top-0 md:top-30 lg:top-40 rounded-0 md:rounded-4xl shadow-md border-3 border-white">
                     <Image src="/images/driver-soat.jpg" alt="Car driver" fill className="object-cover rounded-0 md:rounded-4xl" priority />
                     <div className="w-3/5 md:w-2/5 z-10 flex flex-col gap-3 h-fit p-box-one absolute left-0 bottom-3/7 md:bottom-1/3">

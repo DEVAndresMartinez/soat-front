@@ -42,7 +42,7 @@ function ValidatedInput({ value, onChange, placeholder, error, maxLength, minLen
 export default function PriceModal({ isOpen, onClose, onSubmit }: {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { placa: string; tipoDoc: string; numeroDoc: string }) => void;
+    onSubmit: (data: { placa: string; tipoDoc: string; numeroDoc: number }) => void;
 }) {
     const [selected, setSelected] = useState(identificactionTypes[0]);
     const [placa, setPlaca] = useState('');
@@ -80,7 +80,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
             await onSubmit({
                 placa,
                 tipoDoc: selected.pref,
-                numeroDoc
+                numeroDoc: Number(numeroDoc)
             });
         } finally {
             setLoading(false);

@@ -44,7 +44,7 @@ export default function Advantages() {
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
 
-    const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: string }) => {
+    const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
         if (!result) {
             setConsultData(null);

@@ -32,7 +32,7 @@ export function useSoatApi() {
         }
     }, []);
 
-    const consultarSoat = useCallback(async (data: { placa: string; tipoDoc: string; numeroDoc: string }) => {
+    const consultarSoat = useCallback(async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         setLoading(true);
         setError(null);
         try {
@@ -64,23 +64,20 @@ export function useSoatApi() {
                 consultaId: result.consultaId,
                 clienteId: result.clienteId,
                 data: {
-                    success: result.data.success,
-                    message: result.data.message,
-                    data: {
-                        comisionServicio: result.data.data.comisionServicio,
-                        fechaInicioVigencia: result.data.data.fechaInicioVigencia,
-                        fechaFinVigencia: result.data.data.fechaFinVigencia,
-                        tipoDocumento: result.data.data.tipoDocumento,
-                        placa: result.data.data.placa,
-                        homologacion: result.data.data.homologacion,
-                        documento: result.data.data.documento,
-                        homologacionesEncontradas: result.data.data.homologacionesEncontradas,
-                        vehiculo: result.data.data.vehiculo,
-                        propietario: result.data.data.propietario,
-                        ciudad: result.data.data.ciudad,
-                        nombre: result.data.data.nombre,
-                        apellido: result.data.data.apellido,
-                    }
+                    comisionServicio: result.data.comisionServicio,
+                    fechaInicioVigencia: result.data.fechaInicioVigencia,
+                    fechaFinVigencia: result.data.fechaFinVigencia,
+                    tipoDocumento: result.data.tipoDocumento,
+                    placa: result.data.placa,
+                    homologacion: result.data.homologacion,
+                    documento: result.data.documento,
+                    homologacionesEncontradas: result.data.homologacionesEncontradas,
+                    vehiculo: result.data.vehiculo,
+                    propietario: result.data.propietario,
+                    ciudad: result.data.ciudad,
+                    nombre: result.data.nombre,
+                    apellido: result.data.apellido,
+
                 },
                 timestamp: result.timestamp,
                 api_key_used: result.api_key_used,
@@ -153,7 +150,7 @@ export function useSoatApi() {
             if (response.status === 404) {
                 setError('Cupón no válido o no encontrado.');
                 return null;
-            } 
+            }
 
             const result = await response.json();
             const cuponData: CuponDataResponse = {
