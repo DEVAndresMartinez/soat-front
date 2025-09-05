@@ -14,6 +14,12 @@
     box-sizing: border-box;
 }
 
+input[type='number'] {
+    appearance: textfield;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+}
+
 body {
     font-family: 'Gotham', sans-serif;
 }
@@ -157,6 +163,10 @@ html::-webkit-scrollbar-thumb, .overflow-style::-webkit-scrollbar-thumb {
 .input-style {
     height: 40px;
     padding: 0 0.5rem;
+    font-family: 'Flama', sans-serif;
+}
+
+.text-flama {
     font-family: 'Flama', sans-serif;
 }
 

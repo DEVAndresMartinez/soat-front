@@ -1,7 +1,12 @@
 'use client';
 
+import { useDisableScroll } from "@/hooks/DisableScroll";
+import { useSoatApi } from "@/hooks/UseSoatApi";
+import { ValidateCuponData } from "@/types/ValidateCuponData";
 import { Listbox } from "@headlessui/react";
 import { useState } from "react";
+import Alert from "../AlertValidate";
+import ValidateCuponModal from "../modals/ValidateCuponModal";
 
 const identificactionTypes = [
     {
@@ -19,9 +24,46 @@ const identificactionTypes = [
 export default function Points() {
 
     const [selected, setSelected] = useState(identificactionTypes[0]);
+    const [consultCuponModal, setConsultCuponModal] = useState<ValidateCuponData | null>(null);
+    const [numeroDoc, setNumeroDoc] = useState('');
+    const [openRequestCuponModal, setRequestCuponModal] = useState(false);
+    const [showError, setShowError] = useState(false);
+
+    const { cuponDataValidate, error, loading } = useSoatApi();
+
+    useDisableScroll(openRequestCuponModal);
+
+    const handleConsult = async (data: { identification: string }) => {
+        const result = await cuponDataValidate(data);
+        if (!result) {
+            setShowError(true);
+            setTimeout(() => setShowError(false), 4000);
+        }
+        setConsultCuponModal(result)
+        setRequestCuponModal(true);
+    }
+
+    const handleNumeroDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNumeroDoc(e.target.value);
+    }
+
+    const handleCloseModal = () => {
+        setConsultCuponModal(null);
+        setRequestCuponModal(false);
+    }
 
     return (
         <section id="points" className="w-full flex flex-col-reverse md:flex-row">
+            <Alert
+                show={showError}
+                message={error}
+            />
+            <ValidateCuponModal
+                isOpen={openRequestCuponModal}
+                onClose={handleCloseModal}
+                loading={loading}
+                data={consultCuponModal}
+            />
             <div className="w-full flex justify-center items-center bg-white p-points">
                 <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-10 w-[95%] md:w-[95%] lg:w-[80%] h-full bg-[var(--secondary)] rounded-4xl p-points">
                     <div className="w-full md:w-3/7 bg-white p-points rounded-3xl flex flex-col gap-3">
@@ -47,7 +89,7 @@ export default function Points() {
                                                     key={type.id}
                                                     value={type}
                                                     className={({ active, selected }) =>
-                                                        `cursor-pointer select-none input-style flex items-center text-sm ${active ? 'bg-[var(--primary)] text-white' : 'text-[var(--secondary)]'
+                                                        `cursor-pointer select-none input-style flex items-center text-sm ${active ? 'bg-[var(--bg-footer)] text-[var(--secondary)]' : 'text-[var(--secondary)]'
                                                         } ${selected ? 'font-bold' : ''}`
                                                     }
                                                 >
@@ -59,13 +101,16 @@ export default function Points() {
                                 </Listbox>
                             </div>
 
-                            <input type="text" placeholder="Número de documento" className="w-full border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required />
+                            <input type="text" placeholder="Número de documento" className="w-full border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required value={numeroDoc} onChange={handleNumeroDocChange}/>
                             <div className="flex flex-col gap-3 w-full">
                                 <div className="w-full h-16 bg-gray-200 rounded-md flex items-center justify-center text-gray-600">
                                     CAPTCHA SIMULADO
                                 </div>
                             </div>
-                            <button type="submit" className="bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style-points rounded-md hover:scale-95 transition-transform hover:cursor-pointer text-2xl">
+                            <button type="submit" className="bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style-points rounded-md hover:scale-95 transition-transform hover:cursor-pointer text-2xl" onClick={(e) => {
+                                e.preventDefault();
+                                handleConsult({ identification: numeroDoc });
+                            }}>
                                 CONSULTAR
                             </button>
                         </form>

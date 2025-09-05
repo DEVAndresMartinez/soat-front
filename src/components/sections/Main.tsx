@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Image from "next/image";
@@ -9,6 +10,8 @@ import { useSoatApi } from "@/hooks/UseSoatApi";
 import { useDisableScroll } from "@/hooks/DisableScroll";
 import { DataResponse } from "@/types/ConsultaData";
 import { CuponDataResponse } from "@/types/CuponData";
+import DataModal from "../modals/DataModal";
+import { PaymentMethodResponse } from "@/types/PaymentMethodData";
 
 export default function Main() {
 
@@ -17,11 +20,14 @@ export default function Main() {
     const [showResultModal, setShowResultModal] = useState(false);
     const [showError, setShowError] = useState(false);
     const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
+    const [showLastModal, setShowLastModal] = useState(false);
+    const [dataPaymentMethods, setDataPaymentMethods] = useState<PaymentMethodResponse | null>(null);
 
-    const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion } = useSoatApi();
+    const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion, paymentMethods, clientUpdate, saveSale, setError } = useSoatApi();
 
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
+    useDisableScroll(showLastModal);
 
     const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
@@ -49,8 +55,53 @@ export default function Main() {
 
     const handleCloseResultModal = () => {
         setShowResultModal(false);
+        setShowLastModal(false)
         setCuponData(null);
+        setDataPaymentMethods(null);
     }
+
+    const handlePurchaseSubmit = async () => {
+        const result = await paymentMethods();
+        setDataPaymentMethods(result);
+        setShowResultModal(false);
+        setShowLastModal(true);
+    }
+
+    const handleFinalSubmit = async (payload: any) => {
+        try {
+            const clientRes = await clientUpdate(payload.clienteId, {
+                nombres: payload.nombres,
+                apellidos: payload.apellidos,
+                telefono: payload.telefono,
+                correo: payload.correo,
+                sexo: payload.sexo,
+                idCiudad: payload.idCiudad,
+                idDepartamento: payload.idDepartamento,
+                direccion: payload.direccion,
+            });
+
+            if (!clientRes?.success) {
+                setError("No se pudo actualizar el cliente");
+                return;
+            }
+
+            const saleRes = await saveSale({
+                consultaId: payload.consultaId,
+                cupon: payload.cupon,
+                clienteId: payload.clienteId,
+                metodoPagoId: payload.metodoPagoId,
+            });
+
+            if (!saleRes?.success) {
+                setError("No se pudo registrar la venta");
+                return;
+            }
+
+        } catch (error) {
+            setError("Ocurrió un error inesperado");
+        }
+    };
+
 
     return (
         <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center z-100">
@@ -73,11 +124,23 @@ export default function Main() {
                 cuponData={cuponData}
                 actualizarHomologacion={actualizarHomologacion}
                 loading={loading}
+                onSubmit={handlePurchaseSubmit}
             />
+
+            <DataModal
+                isOpen={showLastModal}
+                onClose={handleCloseResultModal}
+                onSubmit={handleFinalSubmit}
+                loading={loading}
+                data={consultData}
+                dataCupon={cuponData}
+                paymentMethods={dataPaymentMethods}
+            />
+
             <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]" />
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
-                <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={210} height={100}></Image>
-                <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 flex md:hidden" width={210} height={100}></Image>
+                <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={120} height={100}></Image>
+                <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 flex md:hidden" width={120} height={100}></Image>
                 <button type="button" className="absolute right-3 md:right-1/30 lg:right-1/10 top-6 md:top-8 lg:top-12 z-20 hidden md:flex hover:cursor-pointer btn-points hover:scale-110 transition-all duration-200" onClick={() => {
                     const el = document.getElementById('points');
                     el?.scrollIntoView({ behavior: 'smooth' });

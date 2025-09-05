@@ -3,20 +3,20 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import '../../styles/globals.css'
-import { Listbox } from '@headlessui/react';
 import { DataResponse, Homologacion } from '@/types/ConsultaData';
 import { useEffect, useState } from 'react';
 import { CuponDataResponse } from '@/types/CuponData';
 
 
-export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, actualizarHomologacion, loading }: {
+export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, actualizarHomologacion, loading, onSubmit }: {
     isOpen: boolean;
     onClose: () => void;
     data: DataResponse | null;
     cupon: (data: { consultaId: string; cupon: string; clienteId: string }) => Promise<void>;
     cuponData: CuponDataResponse | null;
-    actualizarHomologacion: (data: { consultaId: string; homologacionId: string }) => Promise<void>;
+    actualizarHomologacion: (data: { consultaId: string; homologacionId: string }) => Promise<unknown>;
     loading: boolean;
+    onSubmit: () => void
 }) {
 
     const [homologacionSelected, setHomologacionSelected] = useState<Homologacion | null>(null);
@@ -27,13 +27,13 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
     useEffect(() => {
         if (isOpen) {
             setHomologacionSelected(
-                data?.data.homologacionesEncontradas.length === 1
+                data?.data?.homologacionesEncontradas?.length === 1
                     ? data.data.homologacionesEncontradas[0]
                     : null
             );
             setCuponCode('');
             setIsSelected(false);
-            setDescuento(data?.data.homologacionesEncontradas[0].valorTotal || 0);
+            setDescuento(data?.data?.homologacionesEncontradas[0]?.valorTotal || 0);
         }
     }, [isOpen, data]);
 
@@ -71,7 +71,7 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                         <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" width={100} height={100} className="self-center"></Image>
 
                         <h1 className="font-bold text-[var(--secondary)]">Condiciones:</h1>
-                        <p className="new-text text-[var(--secondary)]">1.Esta compra tiene una tarifa transaccional asociada de $ {data?.data.comisionServicio?.toLocaleString('es-CO')},la cual se informa por este medio. Para confirmar que el usuario está de acuerdo, debe aceptar términos y condiciones. Artículo41, numeral5: “IRREVOCABILIDAD”. La póliza del SOAT no podrá ser revocada por ninguna de las partes intervinientes. <br /> Después de realizada la venta, el  SOAT digital será enviado al correo electrónico, víaSMS, y podrá ser posteriormente descargado de la página de la Aseguradora. Antes de emitir la póliza, debe recibirse el dinero de la póliza más el costo tecnológico. Los datos tales como correo electrónico y número de celular son únicos por póliza.</p>
+                        <p className="new-text text-[var(--secondary)]">1. Esta compra tiene una tarifa transaccional asociada de $ {data?.data.comisionServicio?.toLocaleString('es-CO')}, la cual se informa por este medio. Para confirmar que el usuario está de acuerdo, debe aceptar términos y condiciones. Artículo 41, numeral 5: “IRREVOCABILIDAD”. La póliza del SOAT no podrá ser revocada por ninguna de las partes intervinientes. <br /> Después de realizada la venta, el  SOAT digital será enviado al correo electrónico, vía SMS, y podrá ser posteriormente descargado de la página de la Aseguradora. Antes de emitir la póliza, debe recibirse el dinero de la póliza más el costo tecnológico. Los datos tales como correo electrónico y número de celular son únicos por póliza.</p>
 
                         <div className="flex gap-2 items-center">
                             <input type="checkbox" name="tyc" id="tyc" checked={isSelected} onChange={(e) => setIsSelected(e.target.checked)} />
@@ -80,56 +80,45 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
 
                         <hr className="w-full border-t-3 border-[var(--primary)]" />
 
-                        {data?.data.homologacionesEncontradas && data.data.homologacionesEncontradas.length > 0 && (
-                            <div className="w-full">
-                                <Listbox
-                                    value={homologacionSelected}
-                                    onChange={async (value) => {
-                                        setHomologacionSelected(value);
-                                        if (value && data?.consultaId) {
-                                            await actualizarHomologacion({
-                                                consultaId: data.consultaId,
-                                                homologacionId: value.homologacionId
-                                            });
-                                        }
-                                    }}
-                                    disabled={loading}
-                                >
-                                    <div className="relative">
-                                        <Listbox.Button
-                                            className="appearance-none w-full text-left bg-white text-[var(--secondary)] border border-gray-300 rounded-md input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                            disabled={loading}
-                                        >
-                                            {homologacionSelected
-                                                ? `$ ${homologacionSelected.valor.toLocaleString('es-CO')} - ${homologacionSelected.claseNombre} a ${homologacionSelected.fin_vigencia}`
-                                                : 'Selecciona tipo de Vehículo'}
-                                        </Listbox.Button>
-                                        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                                            <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                                                <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
-                                            </svg>
-                                        </div>
-                                        <Listbox.Options className="border border-gray-300 absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg">
-                                            {data?.data.homologacionesEncontradas?.map((type) => (
-                                                <Listbox.Option
-                                                    key={type.homologacionId}
-                                                    value={type}
-                                                    className={({ active, selected }) =>
-                                                        `cursor-pointer select-none input-style flex items-center text-sm ${active ? 'bg-[var(--primary)] text-white' : 'text-[var(--secondary)]'} ${selected ? 'font-bold' : ''}`
-                                                    }
-                                                >
-                                                    {`$ ${type.valor.toLocaleString('es-CO')} - ${type.claseNombre} a ${type.fin_vigencia}`}
-                                                </Listbox.Option>
-                                            ))}
-                                        </Listbox.Options>
-                                    </div>
-                                </Listbox>
+                        {data?.data.homologacionesEncontradas && data.data?.homologacionesEncontradas?.length > 0 && (
+                            <div className="w-full flex flex-col gap-2">
+                                {data.data.homologacionesEncontradas.map((type) => (
+                                    <label
+                                        key={type.homologacionId}
+                                        className="relative flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer transition-all duration-200 hover:border-[var(--primary)] hover:shadow-md"
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="homologacion"
+                                            value={type.homologacionId}
+                                            checked={homologacionSelected?.homologacionId === type.homologacionId}
+                                            onChange={async () => {
+                                                setHomologacionSelected(type);
+                                                if (data?.consultaId) {
+                                                    await actualizarHomologacion({
+                                                        consultaId: data.consultaId,
+                                                        homologacionId: type.homologacionId,
+                                                    });
+                                                }
+                                            }}
+                                            className="peer hidden"
+                                        />
+
+                                        <span className="w-5 h-5 flex items-center justify-center rounded-full border border-gray-400 peer-checked:border-[var(--primary)] peer-checked:bg-[var(--primary)] transition-all">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-white peer-checked:bg-white"></span>
+                                        </span>
+
+                                        <span className="text-sm text-[var(--secondary)] peer-checked:font-semibold peer-checked:text-[var(--primary)]">
+                                            {`$ ${type.valor.toLocaleString('es-CO')} - ${type.claseNombre} a ${type.fin_vigencia}`}
+                                        </span>
+                                    </label>
+                                ))}
                             </div>
                         )}
 
                         <hr className="w-full border-t-3 border-[var(--primary)]" />
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
                             <div className="w-full flex flex-wrap">
                                 <p className="w-1/2 text-[var(--secondary)]"><b>Marca: </b> {data?.data.vehiculo.marca} </p>
                                 <p className="w-1/2 text-[var(--secondary)]"><b>Línea: </b> {data?.data.vehiculo.linea} </p>
@@ -139,12 +128,12 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                             </div>
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
 
                             <hr className="w-full border-t-3 border-[var(--primary)]" />
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
                             <div className="w-full flex flex-wrap">
                                 <p className="w-1/2 text-[var(--secondary)]">
                                     <b>Costo SOAT: </b> $ {homologacionSelected?.valor?.toLocaleString('es-CO')}
@@ -162,12 +151,12 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                         )}
 
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
 
                             <hr className="w-full border-t-3 border-[var(--primary)]" />
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
                             <div className="w-full flex flex-col md:flex-row flex-wrap items-center justify-between">
                                 <label htmlFor="code" className="w-full md:w-1/2 text-[var(--secondary)] font-bold">¿Tienes un código de descuento?</label>
                                 <div className="w-full md:w-1/2 flex gap-3 justify-center">
@@ -200,12 +189,12 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                             </div>
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
 
                             <hr className="w-full border-t-3 border-[var(--primary)]" />
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
                             <div className="w-full">
                                 <p className="w-full flex justify-between text-[var(--secondary)]">
                                     <b className="w-1/2">Valor con descuento: </b>
@@ -216,10 +205,10 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                             </div>
                         )}
 
-                        {(homologacionSelected || data?.data.homologacionesEncontradas.length === 1) && (
+                        {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
 
                             <button type="submit" className={`self-center bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style btn-validar rounded-md hover:scale-95 transition-transform hover:cursor-pointer ${!isSelected || !homologacionSelected ? 'opacity-50 pointer-events-none' : ''}`
-                            } disabled={!isSelected || !homologacionSelected} >
+                            } disabled={!isSelected || !homologacionSelected} onClick={() => onSubmit()}>
                                 COMPRAR
                             </button>
                         )}

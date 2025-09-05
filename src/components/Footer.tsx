@@ -66,7 +66,7 @@ export default function Footer() {
                 <div className="flex w-full md:w-full lg:w-1/3 flex-col gap-2 md:gap-4">
                     <h3 className="text-[var(--secondary)] font-extrabold text-lg">Contacto</h3>
                     <p className="text-[var(--secondary)] text-lg">
-                        Celular: + (57) 310 8197930
+                        Celular: + (57) 304 2445000
                     </p>
                     <p className="text-[var(--secondary)] text-lg">
                         Dirección: Km 1.5 vía Chía Cajicá
@@ -74,8 +74,7 @@ export default function Footer() {
                         empresarial / oficinas 313 y 316
                     </p>
                     <p className="text-[var(--secondary)] text-lg">
-                        servicioalcliente@practisistemas.com
-                        pqr@practisistemas.com
+                        soporte@practisistemas.com
                     </p>
                     <div className="w-full md:w-fit justify-around bg-[var(--secondary)] flex gap-2 md:gap-4 text-white rounded-md p-socials">
                         {socials.map((social, index) => (
@@ -89,7 +88,7 @@ export default function Footer() {
             </div>
             <hr className="w-full border-t-3 border-[var(--primary)]" />
             <div className="w-full md:w-2/3 lg:w-1/2 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-10">
-                <Image className="w-15 md:w-25" src="/images/practi/WEB SOAT ICO_ICO 18.png" alt="" width={100} height={100}></Image>
+                <Image className="w-15 md:w-25" src="/images/practi/WEB SOAT ICO_ICO 18.png" alt="" width={240} height={100}></Image>
                 <p className="text-[var(--secondary)] w-full md:w-2/3 text-lg text-center md:text-left" >
                     Practi actúa como canal digital autorizado para la
                     emisión de SOAT a través de aseguradoras aliadas. <br />

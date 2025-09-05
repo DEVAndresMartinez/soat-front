@@ -11,7 +11,7 @@ const identificactionTypes = [
 ];
 
 const validatePlaca = (value: string) =>
-    /^[A-Z0-9]{5,6}$/.test(value) ? '' : 'La placa debe tener 5 o 6 caracteres';
+    /^[A-Z0-9]{6,7}$/.test(value) ? '' : 'La placa debe tener 5 o 6 caracteres';
 
 const validateNumeroDoc = (value: string) =>
     /^\d{5,10}$/.test(value) ? '' : 'El número de documento debe tener entre 5 y 10 dígitos';
@@ -117,7 +117,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                             &times;
                         </button>
 
-                        <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" width={100} height={100} />
+                        <Image src="/images/practi/WEB SOAT ICO_ICO 17.png" alt="Logo practisistemas" width={100} height={100} className="w-[100px] h-auto" />
 
                         <h2 className="text-xl font-bold text-[var(--secondary)] text-center mb-modal">
                             Datos necesarios para completar la cotización
@@ -152,7 +152,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                                                     key={type.id}
                                                     value={type}
                                                     className={({ active, selected }) =>
-                                                        `cursor-pointer select-none input-style flex items-center text-sm ${active ? 'bg-[var(--primary)] text-white' : 'text-[var(--secondary)]'} ${selected ? 'font-bold' : ''}`
+                                                        `cursor-pointer select-none input-style flex items-center text-sm ${active ? 'bg-[var(--bg-footer)] text-[var(--secondary)]' : 'text-[var(--secondary)]'} ${selected ? 'font-bold' : ''}`
                                                     }
                                                 >
                                                     {type.name}
