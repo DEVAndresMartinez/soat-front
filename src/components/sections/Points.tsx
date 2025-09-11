@@ -101,7 +101,7 @@ export default function Points() {
                                 </Listbox>
                             </div>
 
-                            <input type="text" placeholder="Número de documento" className="w-full border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required value={numeroDoc} onChange={handleNumeroDocChange}/>
+                            <input type="text" placeholder="Número de documento" className="w-full border border-gray-300 rounded-md text-[var(--secondary)] input-style focus:outline-none focus:ring-2 focus:ring-[var(--primary)] hover:outline-none hover:ring-2 hover:ring-[var(--primary)]" required value={numeroDoc} onChange={handleNumeroDocChange} />
                             <div className="flex flex-col gap-3 w-full">
                                 <div className="w-full h-16 bg-gray-200 rounded-md flex items-center justify-center text-gray-600">
                                     CAPTCHA SIMULADO

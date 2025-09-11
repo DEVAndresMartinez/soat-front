@@ -12,26 +12,27 @@ import { DataResponse } from "@/types/ConsultaData";
 import ResultModal from "../modals/ResultModal";
 import DataModal from "../modals/DataModal";
 import { PaymentMethodResponse } from "@/types/PaymentMethodData";
+import SaleResultModal from "../modals/SaleResultModal";
 
 export default function Reminder() {
     const [openRequestOneModal, setRequestOneModal] = useState(false);
     const [consultData, setConsultData] = useState<DataResponse | null>(null);
     const [showResultModal, setShowResultModal] = useState(false);
-    const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
-
-    const [openModal, setOpenModal] = useState(false);
-    const openConsulta = () => setOpenModal(true);
     const [showError, setShowError] = useState(false);
-    useDisableScroll(openModal);
+    const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
     const [showLastModal, setShowLastModal] = useState(false);
     const [dataPaymentMethods, setDataPaymentMethods] = useState<PaymentMethodResponse | null>(null);
-
-
+    const [saleResult, setSaleResult] = useState<any | null>(null);
+    const [showSaleModal, setShowSaleModal] = useState(false);
+    
+    
     const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion, paymentMethods, clientUpdate, saveSale, setError } = useSoatApi();
-
+    
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
     useDisableScroll(showLastModal);
+
+    useDisableScroll(showSaleModal);
 
     const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
@@ -61,7 +62,7 @@ export default function Reminder() {
         setShowResultModal(false);
         setShowLastModal(false)
         setCuponData(null);
-        setDataPaymentMethods(null)
+        setDataPaymentMethods(null);
     }
 
     const handlePurchaseSubmit = async () => {
@@ -101,6 +102,10 @@ export default function Reminder() {
                 return;
             }
 
+            setShowLastModal(false);
+            setSaleResult(saleRes);
+            setShowSaleModal(true);
+
         } catch (error) {
             setError("Ocurrió un error inesperado");
         }
@@ -139,6 +144,11 @@ export default function Reminder() {
                 dataCupon={cuponData}
                 paymentMethods={dataPaymentMethods}
             />
+            <SaleResultModal
+                isOpen={showSaleModal}
+                onClose={() => setShowSaleModal(false)}
+                saleResult={saleResult}
+            />
             <div className="w-full flex flex-col gap-3 justify-center items-center h-3/6 bg-white p-adv">
                 <div className="flex flex-col md:flex-row justify-evenly items-center gap-5 w-[90%] md:w-[95%] lg:w-[80%] h-full bg-[var(--primary)] rounded-2xl">
                     <div className="w-full md:w-[70%] lg:w-[70%] p-reminder">
@@ -147,7 +157,7 @@ export default function Reminder() {
                     </div>
                     <Image src="/images/Rectangle.png" alt="Imagen mujer con soat" width="200" height="300" className="scale-115 relative bottom-4 right-0 md:right-10 z-10"></Image>
                 </div>
-                <button type="button" className="p-btn rounded-2xl font-bold text-2xl bg-[var(--secondary)] text-white outline-0 p-btn cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={openConsulta}>Cotiza y renueva ahora</button>
+                <button type="button" className="p-btn rounded-2xl font-bold text-2xl bg-[var(--secondary)] text-white outline-0 p-btn cursor-pointer hover:scale-90 transition-all duration-200 btn-loop" onClick={() => setRequestOneModal(true)}>Cotiza y renueva ahora</button>
             </div>
         </section>
     );

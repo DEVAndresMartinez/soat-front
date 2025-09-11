@@ -50,6 +50,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
     const [loading, setLoading] = useState(false);
     const [placaError, setPlacaError] = useState('');
     const [numeroDocError, setNumeroDocError] = useState('');
+    const [isSelected, setIsSelected] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -59,6 +60,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
             setLoading(false);
             setPlacaError('');
             setNumeroDocError('');
+            setIsSelected(false);
         }
     }, [isOpen]);
 
@@ -101,7 +103,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-white rounded-4xl w-[90%] md:w-[350px] p-modal shadow-lg relative flex flex-col items-center"
+                        className="bg-white rounded-2xl w-[90%] md:w-[350px] p-modal shadow-lg relative flex flex-col items-center"
                     >
                         {loading && (
                             <section className="dots-container rounded-4xl">
@@ -113,7 +115,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                             </section>
                         )}
 
-                        <button onClick={onClose} className="absolute top-3 right-4 text-gray-500 hover:text-black text-2xl hover:cursor-pointer">
+                        <button onClick={onClose} className="absolute top-3 right-4 text-gray-500 hover:text-black text-3xl hover:cursor-pointer">
                             &times;
                         </button>
 
@@ -123,7 +125,7 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                             Datos necesarios para completar la cotización
                         </h2>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3 w-full">
+                        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
                             <ValidatedInput
                                 value={placa}
                                 onChange={handlePlacaChange}
@@ -173,19 +175,18 @@ export default function PriceModal({ isOpen, onClose, onSubmit }: {
                                 filter={v => v.replace(/[^0-9]/g, '')}
                             />
 
-                            <div className="flex flex-col gap-3 w-full m-modal">
-                                <div className="w-full h-16 bg-gray-200 rounded-md flex items-center justify-center text-gray-600">
-                                    CAPTCHA SIMULADO
-                                </div>
+                            <div className="flex gap-3 justify-between items-center self-center w-full">
+                                <input type="checkbox" name="tyc" id="tyc" checked={isSelected} onChange={(e) => setIsSelected(e.target.checked)} />
+                                <label htmlFor="tyc" className="w-140 md:w-70 text-sm text-[var(--secondary)] break-all"> Acepto los <b>términos</b> y <b>condiciones</b>.</label>
                             </div>
 
                             <button
                                 type="submit"
                                 className={`bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style rounded-md transition-transform
                                     ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-95'}
-                                    ${(!placa || !numeroDoc || placaError || numeroDocError) ? 'opacity-50 pointer-events-none' : ''}
+                                    ${(!placa || !numeroDoc || placaError || numeroDocError || !isSelected) ? 'opacity-50 pointer-events-none' : ''}
                                 `}
-                                disabled={loading || !placa || !numeroDoc || !!placaError || !!numeroDocError}
+                                disabled={loading || !placa || !numeroDoc || !!placaError || !!numeroDocError || !isSelected}
                             >
                                 OBTENER INFO VEHÍCULO
                             </button>

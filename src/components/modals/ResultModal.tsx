@@ -20,7 +20,6 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
 }) {
 
     const [homologacionSelected, setHomologacionSelected] = useState<Homologacion | null>(null);
-    const [isSelected, setIsSelected] = useState(false);
     const [cuponCode, setCuponCode] = useState('');
     const [descuento, setDescuento] = useState(0);
 
@@ -32,7 +31,6 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                     : null
             );
             setCuponCode('');
-            setIsSelected(false);
             setDescuento(data?.data?.homologacionesEncontradas[0]?.valorTotal || 0);
         }
     }, [isOpen, data]);
@@ -72,11 +70,6 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
 
                         <h1 className="font-bold text-[var(--secondary)]">Condiciones:</h1>
                         <p className="new-text text-[var(--secondary)]">1. Esta compra tiene una tarifa transaccional asociada de $ {data?.data.comisionServicio?.toLocaleString('es-CO')}, la cual se informa por este medio. Para confirmar que el usuario está de acuerdo, debe aceptar términos y condiciones. Artículo 41, numeral 5: “IRREVOCABILIDAD”. La póliza del SOAT no podrá ser revocada por ninguna de las partes intervinientes. <br /> Después de realizada la venta, el  SOAT digital será enviado al correo electrónico, vía SMS, y podrá ser posteriormente descargado de la página de la Aseguradora. Antes de emitir la póliza, debe recibirse el dinero de la póliza más el costo tecnológico. Los datos tales como correo electrónico y número de celular son únicos por póliza.</p>
-
-                        <div className="flex gap-2 items-center">
-                            <input type="checkbox" name="tyc" id="tyc" checked={isSelected} onChange={(e) => setIsSelected(e.target.checked)} />
-                            <label htmlFor="tyc" className="text-[var(--secondary)] font-bold"> Acepto los términos y condiciones, entiendo que este SOAT no se puede anular.</label>
-                        </div>
 
                         <hr className="w-full border-t-3 border-[var(--primary)]" />
 
@@ -119,34 +112,50 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                         <hr className="w-full border-t-3 border-[var(--primary)]" />
 
                         {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
-                            <div className="w-full flex flex-wrap">
-                                <p className="w-1/2 text-[var(--secondary)]"><b>Marca: </b> {data?.data.vehiculo.marca} </p>
-                                <p className="w-1/2 text-[var(--secondary)]"><b>Línea: </b> {data?.data.vehiculo.linea} </p>
-                                <p className="w-1/2 text-[var(--secondary)]"><b>Modelo: </b> {data?.data.vehiculo.modelo} </p>
-                                <p className="w-1/2 text-[var(--secondary)]"><b>Cilindraje: </b> {data?.data.vehiculo.cilindraje} </p>
-                                <p className="w-full flex justify-between text-[var(--secondary)]"><b className="w-1/2">Nueva vigencia desde: </b> <span className="w-1/2 text-[var(--primary)] font-bold">{homologacionSelected?.inicio_vigencia} hasta {homologacionSelected?.fin_vigencia} </span></p>
+                            <div className="w-full flex flex-col md:flex-row flex-wrap gap-x-4">
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Marca: </b> 
+                                    <p>{data?.data.vehiculo.marca}</p> 
+                                </div>
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Línea: </b> 
+                                    <p>{data?.data.vehiculo.linea}</p> 
+                                </div>
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Modelo: </b> 
+                                    <p>{data?.data.vehiculo.modelo}</p> 
+                                </div>
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Cilindraje: </b> 
+                                    <p>{data?.data.vehiculo.cilindraje}</p> 
+                                </div>
+                                <div className="w-full flex justify-between text-[var(--secondary)]">
+                                    <b className="w-1/2">Nueva vigencia desde: </b> 
+                                    <span className="w-1/2 text-[var(--primary)] font-bold text-right">{homologacionSelected?.inicio_vigencia} hasta {homologacionSelected?.fin_vigencia} </span>
+                                </div>
                             </div>
                         )}
 
                         {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
-
                             <hr className="w-full border-t-3 border-[var(--primary)]" />
                         )}
 
                         {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
-                            <div className="w-full flex flex-wrap">
-                                <p className="w-1/2 text-[var(--secondary)]">
-                                    <b>Costo SOAT: </b> $ {homologacionSelected?.valor?.toLocaleString('es-CO')}
-                                </p>
-                                <p className="w-1/2 text-[var(--secondary)]">
-                                    <b>Costo red de distribución: </b> $ {data?.data.comisionServicio?.toLocaleString('es-CO')}
-                                </p>
-                                <p className="w-full flex justify-between text-[var(--secondary)]">
+                            <div className="w-full flex flex-col md:flex-row flex-wrap gap-x-4">
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Costo SOAT: </b> 
+                                    <p>$ {homologacionSelected?.valor?.toLocaleString('es-CO')}</p>
+                                </div>
+                                <div className="w-full md:w-[48%] text-[var(--secondary)] flex justify-between md:flex-nowrap">
+                                    <b>Costo red de distribución: </b> 
+                                    <p>$ {data?.data.comisionServicio?.toLocaleString('es-CO')}</p>
+                                </div>
+                                <div className="w-full flex justify-between text-[var(--secondary)]">
                                     <b className="w-1/2">Costo de venta total: </b>
-                                    <span className="w-1/2 text-[var(--primary)] font-bold">
+                                    <span className="w-1/2 text-[var(--primary)] font-bold text-right">
                                         $ {homologacionSelected?.valorTotal?.toLocaleString('es-CO')}
                                     </span>
-                                </p>
+                                </div>
                             </div>
                         )}
 
@@ -179,9 +188,10 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                                     <button
                                         type="submit"
                                         className={`w-1/3 bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style btn-validar rounded-md hover:scale-95 transition-transform hover:cursor-pointer
-                                            ${(cuponData && cuponData?.success) ? 'opacity-50 pointer-events-none' : ''}
+                                            ${(cuponCode.length < 5 || cuponData?.success) ? 'opacity-50 pointer-events-none' : ''}
                                             `}
                                         onClick={async () => await cupon({ consultaId: data?.consultaId ?? '', cupon: cuponCode, clienteId: data?.clienteId ?? '' })}
+                                        disabled={cuponCode.length < 5}
                                     >
                                         Validar
                                     </button>
@@ -195,20 +205,20 @@ export default function ResultModal({ isOpen, onClose, data, cupon, cuponData, a
                         )}
 
                         {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
-                            <div className="w-full">
-                                <p className="w-full flex justify-between text-[var(--secondary)]">
-                                    <b className="w-1/2">Valor con descuento: </b>
-                                    <span className="w-1/2 text-[var(--primary)] font-bold">
+                            <div className="w-full flex flex-col md:flex-row flex-wrap gap-x-4">
+                                <div className="w-full text-[var(--secondary)] flex justify-between">
+                                    <b>Valor con descuento: </b>
+                                    <p className="flex-1 text-[var(--primary)] font-bold text-right">
                                         $ {descuento.toLocaleString('es-CO')}
-                                    </span>
-                                </p>
+                                    </p>
+                                </div>
                             </div>
                         )}
 
                         {(homologacionSelected || data?.data?.homologacionesEncontradas?.length === 1) && (
 
-                            <button type="submit" className={`self-center bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style btn-validar rounded-md hover:scale-95 transition-transform hover:cursor-pointer ${!isSelected || !homologacionSelected ? 'opacity-50 pointer-events-none' : ''}`
-                            } disabled={!isSelected || !homologacionSelected} onClick={() => onSubmit()}>
+                            <button type="submit" className={`self-center bg-[var(--primary)] text-[var(--secondary)] font-bold btn-style btn-validar rounded-md hover:scale-95 transition-transform hover:cursor-pointer ${!homologacionSelected ? 'opacity-50 pointer-events-none' : ''}`
+                            } disabled={!homologacionSelected} onClick={() => onSubmit()}>
                                 COMPRAR
                             </button>
                         )}

@@ -12,6 +12,7 @@ import { DataResponse } from "@/types/ConsultaData";
 import { CuponDataResponse } from "@/types/CuponData";
 import DataModal from "../modals/DataModal";
 import { PaymentMethodResponse } from "@/types/PaymentMethodData";
+import SaleResultModal from "../modals/SaleResultModal";
 
 const advantages = [
     {
@@ -45,13 +46,16 @@ export default function Advantages() {
     const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
     const [showLastModal, setShowLastModal] = useState(false);
     const [dataPaymentMethods, setDataPaymentMethods] = useState<PaymentMethodResponse | null>(null);
-
-
+    const [saleResult, setSaleResult] = useState<any | null>(null);
+    const [showSaleModal, setShowSaleModal] = useState(false);
+    
+    
     const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion, paymentMethods, clientUpdate, saveSale, setError } = useSoatApi();
-
+    
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
     useDisableScroll(showLastModal);
+    useDisableScroll(showSaleModal);
 
     const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
@@ -66,7 +70,6 @@ export default function Advantages() {
         setShowResultModal(true);
     };
 
-
     const validateCupon = async (data: { consultaId: string; cupon: string; clienteId: string }) => {
         const result = await cuponValidate(data);
         if (!result) {
@@ -80,7 +83,7 @@ export default function Advantages() {
 
     const handleCloseResultModal = () => {
         setShowResultModal(false);
-        setShowLastModal(false);
+        setShowLastModal(false)
         setCuponData(null);
         setDataPaymentMethods(null);
     }
@@ -122,6 +125,10 @@ export default function Advantages() {
                 return;
             }
 
+            setShowLastModal(false);
+            setSaleResult(saleRes);
+            setShowSaleModal(true);
+
         } catch (error) {
             setError("Ocurrió un error inesperado");
         }
@@ -159,6 +166,11 @@ export default function Advantages() {
                 data={consultData}
                 dataCupon={cuponData}
                 paymentMethods={dataPaymentMethods}
+            />
+            <SaleResultModal
+                isOpen={showSaleModal}
+                onClose={() => setShowSaleModal(false)}
+                saleResult={saleResult}
             />
             <div className="w-full flex flex-col justify-center items-center gap-15 h-3/6 bg-white p-adv">
                 <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-x-20 gap-y-5 w-5/6 md:w-full lg:w-[95%] h-full card-advantages">

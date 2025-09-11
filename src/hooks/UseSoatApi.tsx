@@ -63,7 +63,6 @@ export function useSoatApi() {
                         const errorJson = await response.json();
                         errorMessage = errorJson?.message || errorMessage;
                     } catch {
-                        // si no se puede parsear JSON, mantenemos el mensaje por defecto
                     }
                     throw new Error(errorMessage);
                 }
@@ -77,7 +76,7 @@ export function useSoatApi() {
                 return transform ? transform(result) : result;
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error desconocido");
-                return null; // 👈 evita que la app se rompa
+                return null;
             } finally {
                 setLoading(false);
             }
@@ -85,8 +84,6 @@ export function useSoatApi() {
         [ensureToken]
     );
 
-
-    // 🔹 Endpoints específicos
     const consultarSoat = useCallback(
         (data: { placa: string; tipoDoc: string; numeroDoc: number }) =>
             apiRequest<DataResponse>(

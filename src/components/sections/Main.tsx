@@ -12,6 +12,7 @@ import { DataResponse } from "@/types/ConsultaData";
 import { CuponDataResponse } from "@/types/CuponData";
 import DataModal from "../modals/DataModal";
 import { PaymentMethodResponse } from "@/types/PaymentMethodData";
+import SaleResultModal from "../modals/SaleResultModal";
 
 export default function Main() {
 
@@ -22,12 +23,15 @@ export default function Main() {
     const [cuponData, setCuponData] = useState<CuponDataResponse | null>(null);
     const [showLastModal, setShowLastModal] = useState(false);
     const [dataPaymentMethods, setDataPaymentMethods] = useState<PaymentMethodResponse | null>(null);
+    const [saleResult, setSaleResult] = useState<any | null>(null);
+    const [showSaleModal, setShowSaleModal] = useState(false);
 
     const { consultarSoat, error, cuponValidate, loading, actualizarHomologacion, paymentMethods, clientUpdate, saveSale, setError } = useSoatApi();
 
     useDisableScroll(openRequestOneModal);
     useDisableScroll(showResultModal);
     useDisableScroll(showLastModal);
+    useDisableScroll(showSaleModal);
 
     const handleConsultaSubmit = async (data: { placa: string; tipoDoc: string; numeroDoc: number }) => {
         const result = await consultarSoat(data);
@@ -97,11 +101,14 @@ export default function Main() {
                 return;
             }
 
+            setShowLastModal(false);
+            setSaleResult(saleRes);
+            setShowSaleModal(true);
+
         } catch (error) {
             setError("Ocurrió un error inesperado");
         }
     };
-
 
     return (
         <section className="w-full h-screen md:h-[600px] lg:h-screen flex flex-col items-center z-100">
@@ -136,7 +143,11 @@ export default function Main() {
                 dataCupon={cuponData}
                 paymentMethods={dataPaymentMethods}
             />
-
+            <SaleResultModal
+                isOpen={showSaleModal}
+                onClose={() => setShowSaleModal(false)}
+                saleResult={saleResult}
+            />
             <div className="w-full absolute h-full md:h-[38%] lg:h-[70%] bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)]" />
             <div className="w-full flex justify-center h-full md:h-5/6 bg-white">
                 <Image src="/images/practi/WEB SOAT ICO_ICO 16.png" alt="Logo practisistemas" className="w-[120px] md:w-[170px] lg:w-[210px] absolute left-3 md:left-1/30 lg:left-1/10 top-3 md:top-1 lg:top-3 z-20 hidden md:flex" width={120} height={100}></Image>
